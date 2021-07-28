@@ -1,0 +1,77 @@
+import discord
+from discord.ext import commands
+import random
+import aiohttp
+
+bot = commands.Bot(command_prefix="&", description="We are bored")
+
+Truth = ["Who is your crush?", "Who in this group do you have a crush on",
+         "You have to kiss someone in this group.Whom do you choose?", "What is your least favourite subject?",
+         "Whom in this group would you never kiss?"]
+Dare = ["drink ketchup out of the bottle", "eat walnuts or eat a raw tomato with no condiments"]
+
+
+@bot.event
+async def on_ready():
+    print(f"Ready! Logged in as ur mommy")
+
+@bot.command()
+async def coolrate(ctx):
+    collate = random.randint(0, 100)
+    await ctx.send(f"**You are {collate}% cool!**")
+
+
+@bot.command()
+async def hi(ctx):
+    await ctx.send("Hi! How's your day going?")
+
+
+@bot.command(pass_context=True)
+async def meme(ctx):
+    embed = discord.Embed(title="", description="")
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get('https://www.reddit.com/r/dankmemes/new.json?sort=new') as r:
+            res = await r.json()
+            embed.set_image(url=res['data']['children'][random.randint(0, 25)]['data']['url'])
+            embed.set_footer(text=f"| Requested by {ctx.author.name} | Enjoy your dank memes!")
+            await ctx.send(embed=embed)
+
+
+@bot.command()
+async def truth(ctx):
+    true = random.choice(Truth)
+    await ctx.send(f"{true}")
+
+
+@bot.command()
+async def suggesttruth(ctx):
+    await ctx.send("Please DM @IAmBored for any assistance!")
+
+
+@bot.command()
+async def support(ctx):
+    await ctx.send("Please DM @IAmBored for any assistance!")
+
+
+@bot.command()
+async def rickroll(ctx):
+    await ctx.send("https://media.tenor.com/images/323393ed1e06a5850cdc5fd66684f59d/tenor.gif")
+
+
+@bot.command()
+async def dare(ctx):
+    true = random.choice(Dare)
+    await ctx.send(f"{true}")
+
+
+@bot.command()
+async def personal_dare(ctx, user: discord.User, message):
+    await user.send(f"{user} has sent you a personal challenge!DM them the answer to: \n '{message}'")
+
+
+@bot.command()
+async def personal_truth(ctx, user: discord.User, message):
+    await user.send(f"{user} has sent you a personal question! Dm them the answer to: \n '{message}'")
+
+
+bot.run("ODY5MDc4NjA1MjExMjUwNzU4.YP4-hg.j9QlV6dt1QRGcCgFZ6niSGGA1vs")
